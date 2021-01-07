@@ -21,6 +21,9 @@ function App() {
   // Set game over state
   const [gameOver, setGameOver] = useState(false);
 
+  // Set score state
+  const [score, setScore] = useState(0);
+
   // Initialize:
   // Add two random numbers to grid
   const initialize = () => {
@@ -31,18 +34,10 @@ function App() {
       [0, 0, 0, 0],
     ];
     setGameOver(false)
-
-
+    setScore(0)
     addNumber(emptyGrid);
     addNumber(emptyGrid);
     setData(emptyGrid);
-
-
-
-    // let newGrid = cloneDeep(data);
-    // addNumber(newGrid);
-    // addNumber(newGrid);
-    // setData(newGrid);
   };
 
 
@@ -81,8 +76,10 @@ function App() {
       let col = Math.floor(Math.random() * 4);
       attempts++;
       if (newGrid[row][col] === 0) {
-        newGrid[row][col] = Math.random() > 0.5 ? 2 : 4;
+        let numberToAdd = Math.random() > 0.5 ? 2 : 4;
+        newGrid[row][col] = numberToAdd;
         added = true;
+        handleScore(newGrid);
       }
       if (attempts > 50) {
         gridFull = true;
@@ -91,6 +88,19 @@ function App() {
           alert("Game over");
         }
       }
+    }
+  };
+
+
+
+  const handleScore = (grid) => {
+    let newScore = 0
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 4; col++) {
+        newScore = newScore + grid[row][col];
+        
+      }
+      setScore(newScore);
     }
   };
 
@@ -319,23 +329,6 @@ function App() {
 
 
 
-  // Reset game
-  // const resetGame = () => {
-  //   setGameOver(false);
-  //   const emptyGrid = [
-  //     [0, 0, 0, 0],
-  //     [0, 0, 0, 0],
-  //     [0, 0, 0, 0],
-  //     [0, 0, 0, 0],
-  //   ];
-
-  //   addNumber(emptyGrid);
-  //   addNumber(emptyGrid);
-  //   setData(emptyGrid);
-  // };
-
-
-
   // Handles events (arrow key is pressed)
   const handleKeyDown = (event) => {
     if (gameOver) {
@@ -364,7 +357,6 @@ function App() {
   };
 
   useEffect(() => {
-
     initialize();
   }, []);
 
@@ -401,6 +393,10 @@ function App() {
             <div onClick={
               initialize} style={style.newGameButton}>
               New game
+            </div>
+            <div onClick={
+              initialize} style={style.newGameButton}>
+              {score}
             </div>
           </div>
         </div>
