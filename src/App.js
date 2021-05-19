@@ -394,9 +394,8 @@ function App() {
               initialize} style={style.newGameButton}>
               New game
             </div>
-            <div onClick={
-              initialize} style={style.newGameButton}>
-              {score}
+            <div>
+              {`Score: ${score}`}
             </div>
           </div>
         </div>
