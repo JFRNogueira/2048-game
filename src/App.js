@@ -79,7 +79,7 @@ function App() {
         let numberToAdd = Math.random() > 0.5 ? 2 : 4;
         newGrid[row][col] = numberToAdd;
         added = true;
-        handleScore(newGrid);
+        incrementScore(numberToAdd);
       }
       if (attempts > 50) {
         gridFull = true;
@@ -93,15 +93,9 @@ function App() {
 
 
 
-  const handleScore = (grid) => {
-    let newScore = 0
-    for (let row = 0; row < 4; row++) {
-      for (let col = 0; col < 4; col++) {
-        newScore = newScore + grid[row][col];
-        
-      }
-      setScore(newScore);
-    }
+  const incrementScore = (numberToAdd) => {
+    let newScore = score + numberToAdd
+    setScore(newScore);
   };
 
 
