@@ -3,22 +3,21 @@ import cloneDeep from "lodash.clonedeep";
 import { useEvent, getColors } from "./util";
 import Swipe from "react-easy-swipe";
 
-function App() {
-  // Defines key pree event
-  const UP_ARROW = 38;
-  const DOWN_ARROW = 40;
-  const LEFT_ARROW = 37;
-  const RIGHT_ARROW = 39;
+import swipeLeft from './commands/swipeLeft'
+import swipeRight from './commands/swipeRight'
+import swipeUp from './commands/swipeUp'
+import swipeDown from './commands/swipeDown'
+import handleKeyDown from './commands/handleKeyDown'
 
-  // Set game state
+import './index.css';
+
+function App() {
   const [data, setData] = useState([
     [0, 0, 0, 0],
     [0, 0, 0, 0],
     [0, 0, 0, 0],
     [0, 0, 0, 0],
   ]);
-
-  // Set game over state
   const [gameOver, setGameOver] = useState(false);
 
   // Set score state
@@ -100,220 +99,27 @@ function App() {
 
 
 
-  // Swipe Left
-  const swipeLeft = (mock) => {
-    let oldGrid = data;
-    let newGrid = cloneDeep(data);
-
-    for (let i = 0; i < 4; i++) {
-      let row = newGrid[i];
-      let pos1 = 0;
-      let pos2 = 1;
-
-      while (pos1 < 4) {
-        if (pos2 === 4) {
-          pos1++;
-          pos2 = pos1 + 1;
-          continue;
-        }
-
-
-        if (row[pos2] === 0) {
-          pos2++;
-        } else if (row[pos1] === 0) {
-          row[pos1] = row[pos2];
-          row[pos2] = 0;
-          pos2++;
-        } else if (row[pos1] !== 0) {
-          if (row[pos1] === row[pos2]) {
-            row[pos1] = row[pos1] + row[pos2];
-            row[pos2] = 0;
-            pos1++;
-            pos2 = pos1 + 1;
-          } else {
-            pos1++;
-            pos2 = pos1 + 1;
-          }
-        }
-      }
-    }
-    if (JSON.stringify(oldGrid) !== JSON.stringify(newGrid)) {
-      addNumber(newGrid);
-    }
-    if (mock) {
-      return newGrid;
-    } else {
-      setData(newGrid);
-    }
-  };
-
-
-
-  // Swipe right
-  const swipeRight = (mock) => {
-    let oldGrid = data;
-    let newGrid = cloneDeep(data);
-
-    for (let i = 3; i >= 0; i--) {
-      let row = newGrid[i];
-      let pos1 = row.length - 1;
-      let pos2 = pos1 - 1;
-
-      while (pos1 > 0) {
-        if (pos2 === -1) {
-          pos1--;
-          pos2 = pos1 - 1;
-          continue;
-        }
-
-        if (row[pos2] === 0) {
-          pos2--;
-        } else if (row[pos1] === 0) {
-          row[pos1] = row[pos2];
-          row[pos2] = 0;
-          pos2--;
-        } else if (row[pos1] !== 0) {
-          if (row[pos1] === row[pos2]) {
-            row[pos1] = row[pos1] + row[pos2];
-            row[pos2] = 0;
-            pos1--;
-            pos2 = pos1 - 1;
-          } else {
-            pos1--;
-            pos2 = pos1 - 1;
-          }
-        }
-      }
-    }
-    if (JSON.stringify(newGrid) !== JSON.stringify(oldGrid)) {
-      addNumber(newGrid);
-    }
-
-    if (mock) {
-      return newGrid;
-    } else {
-      setData(newGrid);
-    }
-  };
-
-
-
-  // Swipe down
-  const swipeDown = (mock) => {
-    let oldGrid = data// JSON.parse(JSON.stringify(data));
-    let newGrid = cloneDeep(data);
-
-    for (let i = 0; i < 4; i++) {
-      let pos1 = newGrid.length - 1;
-      let pos2 = pos1 - 1;
-
-      while (pos1 > 0) {
-        if (pos2 === -1) {
-          pos1--;
-          pos2 = pos1 - 1;
-          continue;
-        }
-
-        if (newGrid[pos2][i] === 0) {
-          pos2--;
-        } else if (newGrid[pos1][i] === 0) {
-          newGrid[pos1][i] = newGrid[pos2][i];
-          newGrid[pos2][i] = 0;
-          pos2--;
-        } else if (newGrid[pos1][i] !== 0) {
-          if (newGrid[pos1][i] === newGrid[pos2][i]) {
-            newGrid[pos1][i] = newGrid[pos1][i] + newGrid[pos2][i];
-            newGrid[pos2][i] = 0;
-            pos1--;
-            pos2 = pos1 - 1;
-          } else {
-            pos1--;
-            pos2 = pos1 - 1;
-          }
-        }
-      }
-    }
-    if (JSON.stringify(newGrid) !== JSON.stringify(oldGrid)) {
-      addNumber(newGrid);
-    }
-
-    if (mock) {
-      return newGrid;
-    } else {
-      setData(newGrid);
-    }
-  };
-
-
-
-  // Swipe up
-  const swipeUp = (mock) => {
-
-    let oldGrid = data;//JSON.parse(JSON.stringify(data));
-    let newGrid = cloneDeep(data);
-
-    for (let i = 0; i < 4; i++) {
-      let pos1 = 0;
-      let pos2 = 1;
-
-      while (pos1 < 4) {
-        if (pos2 === 4) {
-          pos1++;
-          pos2 = pos1 + 1;
-          continue;
-        }
-
-        if (newGrid[pos2][i] === 0) {
-          pos2++;
-        } else if (newGrid[pos1][i] === 0) {
-          newGrid[pos1][i] = newGrid[pos2][i];
-          newGrid[pos2][i] = 0;
-          pos2++;
-        } else if (newGrid[pos1][i] !== 0) {
-          if (newGrid[pos1][i] === newGrid[pos2][i]) {
-            newGrid[pos1][i] = newGrid[pos1][i] + newGrid[pos2][i];
-            newGrid[pos2][i] = 0;
-            pos1++;
-            pos2 = pos1 + 1;
-          } else {
-            pos1++;
-            pos2 = pos1 + 1;
-          }
-        }
-      }
-    }
-    if (JSON.stringify(oldGrid) !== JSON.stringify(newGrid)) {
-      addNumber(newGrid);
-    }
-
-    if (mock) {
-      return newGrid;
-    } else {
-      setData(newGrid);
-    }
-  };
-
 
 
   // Check if game over, i. e. there is no possible move
   // It mocks a move and checks if the data result is different from previous state
   const checkIfGameIsOver = () => {
-    let checkLeft = swipeLeft(true);
+    let checkLeft = swipeLeft(data, addNumber, setData, true);
     if (JSON.stringify(data) !== JSON.stringify(checkLeft)) {
       return false;
     }
 
-    let checkerDown = swipeDown(true);
+    let checkerDown = swipeDown(data, addNumber, setData, true);
     if (JSON.stringify(data) !== JSON.stringify(checkerDown)) {
       return false;
     }
 
-    let checkerRight = swipeRight(true);
+    let checkerRight = swipeRight(data, addNumber, setData, true);
     if (JSON.stringify(data) !== JSON.stringify(checkerRight)) {
       return false;
     }
 
-    let checkerUp = swipeUp(true);
+    let checkerUp = swipeUp(data, addNumber, setData, true);
     if (JSON.stringify(data) !== JSON.stringify(checkerUp)) {
       return false;
     }
@@ -324,30 +130,8 @@ function App() {
 
 
   // Handles events (arrow key is pressed)
-  const handleKeyDown = (event) => {
-    if (gameOver) {
-      return;
-    }
-    switch (event.keyCode) {
-      case UP_ARROW:
-        swipeUp();
-        break;
-      case DOWN_ARROW:
-        swipeDown();
-        break;
-      case LEFT_ARROW:
-        swipeLeft();
-        break;
-      case RIGHT_ARROW:
-        swipeRight();
-        break;
-      default:  // If any other key is pressed, ignore
-        break;
-    }
-
-    if (checkIfGameIsOver()) {
-      setGameOver(true);
-    }
+  const handleKeyDownLocal = (event) => {
+    handleKeyDown(data, addNumber, setData, gameOver, checkIfGameIsOver, setGameOver, event)
   };
 
   useEffect(() => {
@@ -355,7 +139,7 @@ function App() {
   }, []);
 
   // This is a custom function
-  useEvent("keydown", handleKeyDown);
+  useEvent("keydown", handleKeyDownLocal);
 
   return (
     <div className="App">
@@ -435,10 +219,10 @@ function App() {
             </div>
           )}
           <Swipe
-            onSwipeDown={() => swipeDown()}
-            onSwipeLeft={() => swipeLeft()}
-            onSwipeRight={() => swipeRight()}
-            onSwipeUp={() => swipeUp()}
+            onSwipeDown={() => swipeDown(data, addNumber, setData)}
+            onSwipeLeft={() => swipeLeft(data, addNumber, setData)}
+            onSwipeRight={() => swipeRight(data, addNumber, setData)}
+            onSwipeUp={() => swipeUp(data, addNumber, setData)}
 
             style={{ overflowY: "hidden" }}
           >
